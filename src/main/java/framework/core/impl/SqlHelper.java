@@ -6,12 +6,12 @@ import java.util.List;
 
 public class SqlHelper {
 
-    public String buildInsertSql( Object model ){
+    public String buildInsertSql( Object model, boolean includeId ){
         StringBuilder sb = new StringBuilder( "INSERT INTO " );
         sb.append( ModelUtils.getInstance().getTableName(model) );
         sb.append(" (");
 
-        List<String> colunas = ModelUtils.getInstance().getColumnNamesWithoutId(model);
+        List<String> colunas = ModelUtils.getInstance().getColumnNames(model, includeId);
         for ( String s: colunas ){
             sb.append(s); sb.append(",");
         }
@@ -31,7 +31,7 @@ public class SqlHelper {
     	sb.append( ModelUtils.getInstance().getTableName(model) );
         sb.append(" WHERE ");
 
-        List<String> colunas = ModelUtils.getInstance().getColumnNames(model);
+        List<String> colunas = ModelUtils.getInstance().getColumnNames(model, true);
         for ( int i = 0; i < colunas.size(); i++ ){
             if(i == colunas.size() - 1) {
                 sb.append(colunas.get(i) + " = ? ");
@@ -59,7 +59,7 @@ public class SqlHelper {
         sb.append( ModelUtils.getInstance().getTableName(model) );
         sb.append(" SET ");
 
-        List<String> colunas = ModelUtils.getInstance().getColumnNamesWithoutId(model);
+        List<String> colunas = ModelUtils.getInstance().getColumnNames(model, false);
         for ( int i = 0; i < colunas.size(); i++ ){
             if(i == colunas.size() - 1) {
                 sb.append(colunas.get(i) + " = ? ");

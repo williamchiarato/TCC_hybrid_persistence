@@ -7,9 +7,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 public class ModelUtils {
 
@@ -34,11 +32,11 @@ public class ModelUtils {
         }
     }
 
-    public List<String> getColumnNamesWithoutId(Object o ) {
+    public List<String> getColumnNames(Object o, boolean includeId ) {
         Field[] campos = o.getClass().getDeclaredFields();
         List<String> colunas = new ArrayList<>();
         for ( Field f : campos ) {
-            if ( f.isAnnotationPresent( Id.class ) ) {
+            if ( f.isAnnotationPresent( Id.class ) && !includeId ) {
                 continue;
             }
             else if ( f.isAnnotationPresent( Column.class ) ) {
@@ -49,38 +47,30 @@ public class ModelUtils {
         return colunas;
     }
 
-    public List<String> getColumnNames(Object o ) {
+    public Map<String,Object> getFields(Object o, boolean includeId) throws IllegalAccessException {
         Field[] campos = o.getClass().getDeclaredFields();
-        List<String> colunas = new ArrayList<>();
+        Map<String,Object> mapa = new HashMap<>();
         for ( Field f : campos ) {
-            if ( f.isAnnotationPresent( Column.class ) ) {
-                Column coluna = f.getAnnotation( Column.class );
-                colunas.add(  coluna.name() );
-            }
-        }
-        return colunas;
-    }
-
-    public List getColumnValuesWithoutId( Object o ) throws IllegalAccessException {
-        Field [] campos = o.getClass().getDeclaredFields();
-        List atributos = new ArrayList();
-        for ( Field f : campos ) {
-            if ( f.isAnnotationPresent( Id.class ) ) {
+            if ( f.isAnnotationPresent( Id.class ) && !includeId ) {
                 continue;
             }
             else if ( f.isAnnotationPresent( Column.class ) ) {
+                Column coluna = f.getAnnotation( Column.class );
                 f.setAccessible(true);
-                atributos.add( f.get( o ) );
+                mapa.put(  coluna.name(), f.get(o) );
             }
         }
-        return atributos;
+        return mapa;
     }
 
-    public List getColumnValues( Object o ) throws IllegalAccessException {
+    public List getColumnValues( Object o, boolean includeId ) throws IllegalAccessException {
         Field [] campos = o.getClass().getDeclaredFields();
         List atributos = new ArrayList();
         for ( Field f : campos ) {
-            if ( f.isAnnotationPresent( Column.class ) ) {
+            if ( f.isAnnotationPresent( Id.class ) && !includeId ) {
+                continue;
+            }
+            else if ( f.isAnnotationPresent( Column.class ) ) {
                 f.setAccessible(true);
                 atributos.add( f.get( o ) );
             }
@@ -143,6 +133,22 @@ public class ModelUtils {
             }
         }
         return false;
+    }
+
+    public Class getIdAnnotationType(Object o ) throws IllegalAccessException {
+        Field [] campos = o.getClass().getDeclaredFields();
+        List atributos = new ArrayList();
+        for ( Field f : campos ) {
+            if ( f.isAnnotationPresent( Id.class ) ) {
+                return f.getType();
+            }
+        }
+        return null;
+    }
+
+    public boolean isIdAnnotationInteger(Object o) throws IllegalAccessException {
+        Class idClass = this.getIdAnnotationType(o);
+        return idClass.equals(Integer.class);
     }
 
     public int getIdValue( Object o ) throws IllegalAccessException {

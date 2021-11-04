@@ -12,7 +12,7 @@ public class TestSqlHelper {
     @Test
     public void testa_criacao_de_sql_de_insert(){
         Pessoa p = new Pessoa();
-        String sql = new SqlHelper().buildInsertSql(p);
+        String sql = new SqlHelper().buildInsertSql(p, true);
 
         System.out.println(sql);
         assertThat(sql).isEqualTo("INSERT INTO pessoa (nome,data_nascimento) VALUES (?,?)");
