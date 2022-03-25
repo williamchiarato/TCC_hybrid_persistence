@@ -9,7 +9,7 @@ import java.util.Calendar;
 public class CarroNovo {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "_id")
     private String id;
 
     @Column(name = "nome")

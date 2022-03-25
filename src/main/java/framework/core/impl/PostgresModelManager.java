@@ -95,17 +95,16 @@ public class PostgresModelManager implements ModelManager {
     }
 
     @Override
-    public void consultar(Class entityClass, Object chavePrimaria) {
+    public void consultar(Object model, Object chavePrimaria) {
 
         Connection connection = ConnectionUtils.getInstance().getConnection();
 
         try {
-            String sql = new SqlHelper().buildSelectSql(entityClass, chavePrimaria);
+            String sql = new SqlHelper().buildSelectSql(model, chavePrimaria);
             PreparedStatement ps = connection.prepareStatement(sql);
 
             System.out.println(sql);
-            //ModelUtils.getInstance().getColumnValues(entityClass);
-            //ps.executeUpdate();
+            ps.execute();
 
         } catch (Exception e ) {
             e.printStackTrace();
