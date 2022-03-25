@@ -46,9 +46,9 @@ public class SqlHelper {
     	return sb.toString();
     }
     
-    public String buildSelectSql(Class entityClass, Object chavePrimaria) {
+    public String buildSelectSql(Object model, Object chavePrimaria) {
     	StringBuilder sb = new StringBuilder("SELECT * FROM ");
-        //sb.append(entityClass);
+        sb.append( ModelUtils.getInstance().getTableName(model) );
         sb.append(" WHERE id = " + chavePrimaria);
 
     	return sb.toString();
