@@ -8,6 +8,6 @@ public interface ModelManager<T> {
 
     void remover(Object model);
 
-    void consultar(Class<T> entityClass, Object chavePrimaria);
+    void consultar(Object model, Object chavePrimaria);
 
 }

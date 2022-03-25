@@ -162,6 +162,17 @@ public class ModelUtils {
         return -1;
     }
 
+    public String getObjectId( Object o ) throws IllegalAccessException {
+        Field [] campos = o.getClass().getDeclaredFields();
+        for ( Field f : campos ) {
+            if ( f.isAnnotationPresent( Id.class ) ) {
+                f.setAccessible(true);
+                return f.get( o ).toString();
+            }
+        }
+        return null;
+    }
+
     public void setIdValue( Object model, Object id ) throws IllegalAccessException {
         Field [] campos = model.getClass().getDeclaredFields();
         for ( Field f : campos ) {
