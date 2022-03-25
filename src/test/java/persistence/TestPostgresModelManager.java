@@ -23,7 +23,7 @@ public class TestPostgresModelManager {
     @Test
     public void testa_insert_na_base(){
         Pessoa p = new Pessoa();
-        p.setNome("William V.");
+        p.setNome("William");
         p.setDataNascimento(Calendar.getInstance());
 
         manager.inserir(p);
@@ -65,39 +65,8 @@ public class TestPostgresModelManager {
     @Test
     public void test_select() {
         Pessoa p = new Pessoa();
-        p.setId(678675);
+        p.setId(1);
 
-        manager.consultar(p, p.getId());
-    }
-
-    @Test
-    public void test_insert_thousands() {
-        long start = System.nanoTime();
-
-        for(int i = 0; i < 100000; i++) {
-            Pessoa p = new Pessoa();
-            p.setNome("Usuario 2 " + (i + 1));
-            p.setDataNascimento(Calendar.getInstance());
-
-            manager.inserir(p);
-            assertThat(p.getId()).isNotNull().isGreaterThan(0);
-
-            //CarroNovo c = new CarroNovo();
-            //c.setNome("Carro 1 " + (i + 1));
-            //c.setDataCompra(Calendar.getInstance());
-
-            //manager.inserir(c);
-
-            //assertThat(c.getId()).isNotNull();
-        }
-
-        long elapsedTime = System.nanoTime() - start;
-        System.out.println(elapsedTime);
-
-        //72671604736 = 1 min 13 sec (carro_novo) - 10.000 registros
-        //68717754062 = 1 min 9 sec (pessoa) - 10.000 registros
-
-        //760611890786 = 12 min 41 sec (carro_novo) - 100.000 registros
-        //790298509982 = 13 min 10 sec (pessoa) - 100.000 registros
+        manager.consultar(p.getClass(), p.getId());
     }
 }
